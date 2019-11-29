@@ -17,6 +17,7 @@ from nsml.constants import DATASET_PATH, GPU_NUM
 
 from model import cnn_sample
 from dataprocessing import resize_and_normalize, dataset_loader, RESIZED_HEIGHT, RESIZED_WIDTH
+from radam import RectifiedAdam
 
 
 ## setting values of preprocessing parameters
@@ -77,12 +78,13 @@ if __name__ == '__main__':
 
     """ Model """
     
-    learning_rate = 1e-4
+    learning_rate = args.lr
 
     model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
     adam = optimizers.Adam(lr=learning_rate, decay=1e-5)                    # optional optimization
     sgd = optimizers.SGD(lr=learning_rate, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['categorical_accuracy'])
+    optimizer = RectifiedAdam(lr=learning_rate)
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['categorical_accuracy'])
 
     bind_model(model)
     if args.pause:  ## test mode일 때
@@ -126,7 +128,6 @@ if __name__ == '__main__':
             # for no augmentation case
             hist = model.fit_generator(train_generator,
                                        steps_per_epoch=len(X_train) / batch_size,
-                                       epochs=args.epoch,
                                        validation_data=(X_val, Y_val),
                                        callbacks=[reduce_lr],
                                        )
