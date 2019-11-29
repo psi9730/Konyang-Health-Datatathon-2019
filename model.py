@@ -22,10 +22,6 @@ from nsml import DATASET_PATH, GPU_NUM
 
 
 def cnn_sample(in_shape, num_classes=4):    # Example CNN
-
-    ## 샘플 모델
-    # 입력 데이터가 (390, 307, 3)의 크기일 때의 예시 코드
-
     model = Sequential()
     model.add(Conv2D(filters=32, kernel_size=3, padding='same', input_shape=in_shape))
     model.add(BatchNormalization(axis=-1))

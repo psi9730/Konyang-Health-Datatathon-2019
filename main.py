@@ -16,12 +16,15 @@ import nsml
 from nsml import DATASET_PATH, GPU_NUM, HAS_DATASET
 from model import cnn_sample
 from dataprocessing import resize_and_normalize, dataset_loader, RESIZED_HEIGHT, RESIZED_WIDTH
+
 from keras_model import densenet
 from keras_model import resnet
 from keras import backend
 from keras import layers
 from keras import models
 from keras import utils
+
+from radam import RectifiedAdam
 
 ## setting values of preprocessing parameters
 RESIZE = 10.
@@ -88,14 +91,15 @@ if __name__ == '__main__':
 
     """ Model """
     
-    learning_rate = 1e-4
+    learning_rate = args.lr
 
     model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
     model = resnet.ResNet50(weights=None, in_shape = (RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes, **wrapper())
 
     adam = optimizers.Adam(lr=learning_rate, decay=1e-5)                    # optional optimization
     sgd = optimizers.SGD(lr=learning_rate, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['categorical_accuracy'])
+    optimizer = RectifiedAdam(lr=learning_rate)
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['categorical_accuracy'])
 
     bind_model(model)
     if args.pause:  ## test mode일 때
