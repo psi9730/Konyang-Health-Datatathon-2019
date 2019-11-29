@@ -69,6 +69,7 @@ def cnn_sample(in_shape, num_classes=4):    # Example CNN
     model.add(Conv2D(filters=256, kernel_size=3, padding='same'))
     model.add(BatchNormalization(axis=-1))
     model.add((ReLU()))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Flatten())
     model.add(Dense(100, activation='relu'))

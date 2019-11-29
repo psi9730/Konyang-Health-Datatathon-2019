@@ -2,6 +2,7 @@ import os
 import argparse
 import sys
 import time
+import pickle
 import random
 import keras
 import cv2
@@ -11,8 +12,8 @@ import numpy as np
 # RESIZED_HEIGHT = 650
 # RESIZED_WIDTH = 512
 
-RESIZED_HEIGHT = 650
-RESIZED_WIDTH = 512
+RESIZED_HEIGHT = 390
+RESIZED_WIDTH = 307
 
 
 def resize_and_normalize(im, resized_height=RESIZED_HEIGHT, resized_width=RESIZED_WIDTH):
@@ -67,7 +68,37 @@ def dataset_loader(train_path, train_valid_rate, resized_height, resized_width):
             else:
                 valid_images.append(im)
                 valid_labels.append(Label2Class(category))
+            del im
             print(index + 1, '/', filename, ' image(s)')
+
+    #
+    #     with open('./' + category + 'train.pkl', 'wb') as fp:
+    #         pickle.dump(train_images, fp)
+    #     with open('./' + category + 'train_label.pkl', 'wb') as fp:
+    #         pickle.dump(train_labels, fp)
+    #     with open('./' + category + 'valid.pkl', 'wb') as fp:
+    #         pickle.dump(valid_images, fp)
+    #     with open('./' + category + 'valid_label.pkl', 'wb') as fp:
+    #         pickle.dump(valid_labels, fp)
+    #
+    #     train_images = []
+    #     train_labels = []
+    #     valid_images = []
+    #     valid_labels = []
+    #
+    # for category in categories:
+    #     with open('./' + category + 'train.pkl', 'rb') as fp:
+    #         temp_array = pickle.load(fp)
+    #     train_images += temp_array
+    #     with open('./' + category + 'train_label.pkl', 'rb') as fp:
+    #         temp_array = pickle.load(fp)
+    #     train_labels += temp_array
+    #     with open('./' + category + 'valid.pkl', 'rb') as fp:
+    #         temp_array = pickle.load(fp)
+    #     valid_images += temp_array
+    #     with open('./' + category + 'valid_label.pkl', 'rb') as fp:
+    #         temp_array = pickle.load(fp)
+    #     valid_labels += temp_array
 
     train_images = np.array(train_images)
     train_labels = np.array(train_labels)

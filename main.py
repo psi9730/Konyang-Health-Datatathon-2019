@@ -93,7 +93,7 @@ if __name__ == '__main__':
     
     learning_rate = args.lr
 
-    model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
+    # model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
     model = resnet.ResNet50(weights=None, in_shape = (RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes, **wrapper())
 
     adam = optimizers.Adam(lr=learning_rate, decay=1e-5)                    # optional optimization
@@ -115,6 +115,7 @@ if __name__ == '__main__':
         X_train, Y_train, X_val, Y_val = dataset_loader(img_path, args.train_valid_rate,
                                                                                 resized_height=RESIZED_HEIGHT,
                                                                                 resized_width=RESIZED_WIDTH)
+        print(1)
         kwargs = dict(
             rotation_range=180,
             zoom_range=0.1,
@@ -123,8 +124,11 @@ if __name__ == '__main__':
             horizontal_flip=True,
             vertical_flip=True
         )
+        print(2)
         train_datagen = ImageDataGenerator(**kwargs)
+        print(3)
         train_generator = train_datagen.flow(x=X_train, y=Y_train, shuffle=True, batch_size=batch_size, seed=seed)
+        print(4)
         # then flow and fit_generator....
 
         """ Callback """

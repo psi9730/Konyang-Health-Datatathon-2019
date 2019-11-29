@@ -5,5 +5,6 @@ GPU_SIZE=1
 CPU_SIZE=4
 DATASET="KHD2019_FUNDUS"
 MAX_EPOCHS=50
+CPU_MEMORY="30G"
 
-nsml run -g $GPU_SIZE -c $CPU_SIZE -d $DATASET -a "--batch_size $BATCH_SIZE --epoch $MAX_EPOCHS"
+nsml run -g $GPU_SIZE -c $CPU_SIZE -d $DATASET --memory $CPU_MEMORY -a "--batch_size $BATCH_SIZE --epoch $MAX_EPOCHS"
