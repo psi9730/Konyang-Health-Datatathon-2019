@@ -18,8 +18,8 @@ RESIZED_WIDTH = 512
 def resize_and_normalize(im, resized_height=RESIZED_HEIGHT, resized_width=RESIZED_WIDTH):
     # h, w, c = 3900, 3072, 3
     # nh, nw = int(h//resize_factor), int(w//resize_factor)
-    im = cv2.resize(im, (resized_height, resized_width), interpolation=cv2.INTER_AREA)
-    im = cv2.addWeighted(im, 4, cv2.GaussianBlur(im, (0, 0), resized_height/60), -4, 128)
+    im = cv2.resize(im, (resized_width, resized_height), interpolation=cv2.INTER_AREA)
+    im = cv2.addWeighted(im, 4, cv2.GaussianBlur(im, (0, 0), resized_height/30), -4, 128)
     im = im / 255.
     return im  # 0 - 255 사이 값
 

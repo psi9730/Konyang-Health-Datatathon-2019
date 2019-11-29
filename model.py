@@ -15,10 +15,9 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, ZeroPadding2D
 from keras.layers import BatchNormalization, ReLU
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import  ModelCheckpoint, ReduceLROnPlateau
-from keras.utils.training_utils import multi_gpu_model
 import keras.backend.tensorflow_backend as K
 import nsml
-from nsml.constants import DATASET_PATH, GPU_NUM
+from nsml import DATASET_PATH, GPU_NUM
 
 
 

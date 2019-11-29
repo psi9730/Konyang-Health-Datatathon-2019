@@ -13,16 +13,27 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras import optimizers
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 import nsml
-from nsml.constants import DATASET_PATH, GPU_NUM
-
+from nsml import DATASET_PATH, GPU_NUM, HAS_DATASET
 from model import cnn_sample
 from dataprocessing import resize_and_normalize, dataset_loader, RESIZED_HEIGHT, RESIZED_WIDTH
-
+from keras_model import densenet
+from keras_model import resnet
+from keras import backend
+from keras import layers
+from keras import models
+from keras import utils
 
 ## setting values of preprocessing parameters
 RESIZE = 10.
 RESCALE = True
 
+def wrapper():
+        kwargs = dict()
+        kwargs['backend'] = backend
+        kwargs['layers'] = layers
+        kwargs['models'] = models
+        kwargs['utils'] = utils
+        return kwargs
 
 def bind_model(model):
     def save(dir_name):
@@ -58,7 +69,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=16)                      # batch size 설정
     parser.add_argument('--num_classes', type=int, default=4)                     # DO NOT CHANGE num_classes, class 수는 항상 4
     parser.add_argument('--lr', type=float, default=1e-03, help='learning rate (default: 0.001)')
-    parser.add_argument('--train_valid_rate', type=float, default=0.5, help='ratio between train set and valid set')
+    parser.add_argument('--train_valid_rate', type=float, default=0.85, help='ratio between train set and valid set')
 
     # DONOTCHANGE: They are reserved for nsml
     parser.add_argument('--mode', type=str, default='train', help='submit일때 해당값이 test로 설정됩니다.')
@@ -80,6 +91,8 @@ if __name__ == '__main__':
     learning_rate = 1e-4
 
     model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
+    model = resnet.ResNet50(weights=None, in_shape = (RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes, **wrapper())
+
     adam = optimizers.Adam(lr=learning_rate, decay=1e-5)                    # optional optimization
     sgd = optimizers.SGD(lr=learning_rate, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['categorical_accuracy'])
@@ -93,6 +106,8 @@ if __name__ == '__main__':
         print('Training Start...')
 
         img_path = DATASET_PATH + '/train/train_data/'
+        if HAS_DATASET == False:
+            img_path = DATASET_PATH + './sample_dataset/test'
         X_train, Y_train, X_val, Y_val = dataset_loader(img_path, args.train_valid_rate,
                                                                                 resized_height=RESIZED_HEIGHT,
                                                                                 resized_width=RESIZED_WIDTH)
@@ -126,7 +141,6 @@ if __name__ == '__main__':
             # for no augmentation case
             hist = model.fit_generator(train_generator,
                                        steps_per_epoch=len(X_train) / batch_size,
-                                       epochs=args.epoch,
                                        validation_data=(X_val, Y_val),
                                        callbacks=[reduce_lr],
                                        )
