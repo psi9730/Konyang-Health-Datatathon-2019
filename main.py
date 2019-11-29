@@ -59,7 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=16)                      # batch size 설정
     parser.add_argument('--num_classes', type=int, default=4)                     # DO NOT CHANGE num_classes, class 수는 항상 4
     parser.add_argument('--lr', type=float, default=1e-03, help='learning rate (default: 0.001)')
-    parser.add_argument('--train_valid_rate', type=float, default=0.5, help='ratio between train set and valid set')
+    parser.add_argument('--train_valid_rate', type=float, default=0.85, help='ratio between train set and valid set')
 
     # DONOTCHANGE: They are reserved for nsml
     parser.add_argument('--mode', type=str, default='train', help='submit일때 해당값이 test로 설정됩니다.')
