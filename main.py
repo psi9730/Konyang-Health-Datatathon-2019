@@ -151,7 +151,6 @@ if __name__ == '__main__':
             hist = model.fit_generator(train_generator,
                                        steps_per_epoch=len(X_train) / batch_size,
                                        validation_data=(X_val, Y_val),
-                                       callbacks=[reduce_lr],
                                        )
             t2 = time.time()
             print(hist.history)
