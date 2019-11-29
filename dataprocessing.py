@@ -20,25 +20,26 @@ def resize_and_normalize(im, resized_height=RESIZED_HEIGHT, resized_width=RESIZE
     # h, w, c = 3900, 3072, 3
     # nh, nw = int(h//resize_factor), int(w//resize_factor)
     im = cv2.resize(im, (resized_width, resized_height), interpolation=cv2.INTER_AREA)
-    im = cv2.addWeighted(im, 4, cv2.GaussianBlur(im, (0, 0), resized_height/30), -4, 128)
+    im = cv2.addWeighted(im, 4, cv2.GaussianBlur(im, (0, 0), resized_height/60), -4, 128)
     im = im / 255.
     return im  # 0 - 255 사이 값
 
 
 def Label2Class(label):     # one hot encoding (0-3 --> [., ., ., .])
-    resvec = [0, 0, 0, 0]
+    # label smoothing
+    resvec = [0.03333, 0.03333, 0.03333, 0.03333]
     if label == 'AMD':
         cls = 1
-        resvec[cls] = 1
+        resvec[cls] = 0.9
     elif label == 'RVO':
         cls = 2
-        resvec[cls] = 1
+        resvec[cls] = 0.9
     elif label == 'DMR':
         cls = 3
-        resvec[cls] = 1
+        resvec[cls] = 0.9
     else:  # Normal
         cls = 0
-        resvec[cls] = 1
+        resvec[cls] = 0.9
     return resvec
 
 

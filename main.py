@@ -68,7 +68,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # hyperparameters
-    parser.add_argument('--epoch', type=int, default=10)                          # epoch 수 설정
+    parser.add_argument('--epoch', type=int, default=100)                          # epoch 수 설정
     parser.add_argument('--batch_size', type=int, default=16)                      # batch size 설정
     parser.add_argument('--num_classes', type=int, default=4)                     # DO NOT CHANGE num_classes, class 수는 항상 4
     parser.add_argument('--lr', type=float, default=1e-03, help='learning rate (default: 0.001)')
@@ -93,8 +93,9 @@ if __name__ == '__main__':
     
     learning_rate = args.lr
 
-    # model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
-    model = resnet.ResNet50(weights=None, in_shape = (RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes, **wrapper())
+    model = cnn_sample(in_shape=(RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes)
+    # model = resnet.ResNet50(weights=None, in_shape = (RESIZED_HEIGHT, RESIZED_WIDTH, 3), num_classes=num_classes, **wrapper())
+    # model = densenet.DenseNet169(weights=None, input_shape = (RESIZED_HEIGHT, RESIZED_WIDTH, 3), classes=num_classes, **wrapper())
 
     adam = optimizers.Adam(lr=learning_rate, decay=1e-5)                    # optional optimization
     sgd = optimizers.SGD(lr=learning_rate, momentum=0.9, nesterov=True)
@@ -118,7 +119,7 @@ if __name__ == '__main__':
         print(1)
         kwargs = dict(
             rotation_range=180,
-            zoom_range=0.1,
+            zoom_range=0.15,
             width_shift_range=0.1,
             height_shift_range=0.1,
             horizontal_flip=True,
